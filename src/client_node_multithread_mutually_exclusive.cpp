@@ -20,7 +20,7 @@ void ClientNodeMultithreadMutuallyExclusive::sendGoal()
   options.result_callback = [](const ClientGoalHandleFibonacci::WrappedResult& result) { (void) result; };
 
   auto gh_future = client_->async_send_goal(goal, options);
-  gh_future.wait();
+  //gh_future.wait();
 
   auto async_res_future = client_->async_get_result(gh_future.get());
   async_res_future.wait();
