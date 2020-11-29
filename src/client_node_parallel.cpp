@@ -32,13 +32,13 @@ void ClientNodeParallel::asyncHandleClientReq(const std::size_t& order, const rc
   goal.order = order;
 
   rclcpp_action::Client<example_interfaces::action::Fibonacci>::SendGoalOptions options;
-  options.goal_response_callback = [](std::shared_future<ClientGoalHandleFibonacci::SharedPtr> future) { (void) future; };
+  options.goal_response_callback = [](ClientGoalHandleFibonacci::SharedPtr goal_handle) { (void) goal_handle; };
   options.result_callback = [](const ClientGoalHandleFibonacci::WrappedResult& result) { (void) result; };
 
   std::shared_future<ClientGoalHandleFibonacci::SharedPtr> gh_future = client->async_send_goal(goal, options);
   gh_future.wait();
 
-  std::shared_future<ClientGoalHandleFibonacci::WrappedResult> async_res_future = gh_future.get()->async_result();
+  std::shared_future<ClientGoalHandleFibonacci::WrappedResult> async_res_future = client_->async_get_result(gh_future.get());
   async_res_future.wait();
 
   auto result = async_res_future.get();
